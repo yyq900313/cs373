@@ -11,152 +11,151 @@ using Microsoft.Xna.Framework.Media;
 
 namespace WindowsGame1
 {
-///
-
-
-/// This is the main type for your game
-///
-
-public class Game1 : Microsoft.Xna.Framework.Game
-{
-GraphicsDeviceManager graphics;
-SpriteBatch spriteBatch;
-Texture2D enemy;
-Texture2D player;
-public enum STATE {IDLE, CHASING, RETREATING};
-STATE state = STATE.IDLE;
-const int threshold = 200;
-Vector2 Player;
-Vector2 Enemy;
-int cavex;
-int cavey;
-    public Game1()
-    {
-        graphics = new GraphicsDeviceManager(this);
-        Content.RootDirectory = "Content";
-    }
-
     /// <summary>
-    /// Allows the game to perform any initialization it needs to before starting to run.
-    /// This is where it can query for any required services and load any non-graphic
-    /// related content.  Calling base.Initialize will enumerate through any components
-    /// and initialize them as well.
+    /// This is the main type for your game
     /// </summary>
-    protected override void Initialize()
+    public class Game1 : Microsoft.Xna.Framework.Game
     {
-        // TODO: Add your initialization logic here
+        GraphicsDeviceManager graphics;
+        SpriteBatch spriteBatch;
+        Texture2D enemy;
+        Texture2D player;
+        public enum STATE {IDLE, CHASING, RETREATING};
+        STATE state = STATE.IDLE;
+        const int threshold = 200;
+        Vector2 Player;
+        Vector2 Enemy;
+        int cavex;
+        int cavey;
 
-        base.Initialize();
-    }
-
-    /// <summary>
-    /// LoadContent will be called once per game and is the place to load
-    /// all of your content.
-    /// </summary>
-    protected override void LoadContent()
-    {
-        // Create a new SpriteBatch, which can be used to draw textures.
-        spriteBatch = new SpriteBatch(GraphicsDevice);
-
-        enemy = Content.Load<Texture2D>("Sprite\\enemy");
-
-        player = Content.Load<Texture2D>("Sprite\\player");
-
-        Enemy = new Vector2(GraphicsDevice.Viewport.Width - 300, GraphicsDevice.Viewport.Height / 2);
-        cavex = GraphicsDevice.Viewport.Width - 300;
-        cavey = GraphicsDevice.Viewport.Height / 2;
-        // TODO: use this.Content to load your game content here
-    }
-
-    /// <summary>
-    /// UnloadContent will be called once per game and is the place to unload
-    /// all content.
-    /// </summary>
-    protected override void UnloadContent()
-    {
-        // TODO: Unload any non ContentManager content here
-    }
-
-    /// <summary>
-    /// Allows the game to run logic such as updating the world,
-    /// checking for collisions, gathering input, and playing audio.
-    /// </summary>
-    /// <param name="gameTime">Provides a snapshot of timing values.</param>
-    protected override void Update(GameTime gameTime)
-    {
-        // Allows the game to exit
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-            this.Exit();
-
-        // TODO: Add your update logic here
-        Player = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
-        if(state == STATE.IDLE)
+        public Game1()
         {
-            if (threshold > CheckDistance((int)Player.X, (int)Player.Y, (int)Enemy.X, (int)Enemy.Y))
-                ChangeState(state, STATE.CHASING);
+            graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
         }
-        else if(state == STATE.CHASING)
-        {
-            if (threshold < CheckDistance((int)Enemy.X, (int)Enemy.Y, cavex, cavey))
-                ChangeState(state, STATE.RETREATING);
-            else
-            {
-                float angle = AngleToTarget((int)Enemy.X, (int)Enemy.Y, (int)Player.X, (int)Player.Y);
-                Enemy.X += (float)(2 * Math.Sin(angle));
-                Enemy.Y += (float)(2 * Math.Cos(angle));
-            }
 
-            if(threshold < CheckDistance((int)Enemy.X, (int)Enemy.Y, (int)Player.X, (int)Player.Y))
-                ChangeState(state, STATE.RETREATING);
+        /// <summary>
+        /// Allows the game to perform any initialization it needs to before starting to run.
+        /// This is where it can query for any required services and load any non-graphic
+        /// related content.  Calling base.Initialize will enumerate through any components
+        /// and initialize them as well.
+        /// </summary>
+        protected override void Initialize()
+        {
+            // TODO: Add your initialization logic here
+
+            base.Initialize();
         }
-        else if(state == STATE.RETREATING)
-        {
-            if(5 >= CheckDistance((int)Enemy.X, (int)Enemy.Y, cavex, cavey))
-            {
-                Enemy.X = cavex;
-                Enemy.Y = cavey;
-                ChangeState(state, STATE.IDLE);
-            }
-            else
-            {
-                float angle = AngleToTarget((int)Enemy.X, (int)Enemy.Y, cavex, cavey);
-                Enemy.X += (float)(2 * Math.Sin(angle));
-                Enemy.Y += (float)(2 * Math.Cos(angle));
 
-                if (threshold > CheckDistance((int)Player.X, (int)Player.Y, (int)Enemy.X, (int)Enemy.Y))
+        /// <summary>
+        /// LoadContent will be called once per game and is the place to load
+        /// all of your content.
+        /// </summary>
+        protected override void LoadContent()
+        {
+            // Create a new SpriteBatch, which can be used to draw textures.
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            enemy = Content.Load<Texture2D>("Sprite\\enemy");
+
+            player = Content.Load<Texture2D>("Sprite\\player");
+
+            Enemy = new Vector2(GraphicsDevice.Viewport.Width - 300, GraphicsDevice.Viewport.Height / 2);
+            cavex = GraphicsDevice.Viewport.Width - 300;
+            cavey = GraphicsDevice.Viewport.Height / 2;
+            // TODO: use this.Content to load your game content here
+        }
+
+        /// <summary>
+        /// UnloadContent will be called once per game and is the place to unload
+        /// all content.
+        /// </summary>
+        protected override void UnloadContent()
+        {
+            // TODO: Unload any non ContentManager content here
+        }
+
+        /// <summary>
+        /// Allows the game to run logic such as updating the world,
+        /// checking for collisions, gathering input, and playing audio.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        protected override void Update(GameTime gameTime)
+        {
+            // Allows the game to exit
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+                this.Exit();
+
+            // TODO: Add your update logic here
+            Player = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+            if(state == STATE.IDLE)
+            {
+                if(threshold > CheckDistance((int)Player.X, (int)Player.Y, (int)Enemy.X, (int)Enemy.Y))
                     ChangeState(state, STATE.CHASING);
             }
+            else if(state == STATE.CHASING)
+            {
+                if(threshold < CheckDistance((int)Enemy.X, (int)Enemy.Y, cavex, cavey))
+                    ChangeState(state, STATE.RETREATING);
+                else
+                {
+                    float angle = AngleToTarget((int)Enemy.X, (int)Enemy.Y, (int)Player.X, (int)Player.Y);
+                    Enemy.X += (float)(2 * Math.Sin(angle));
+                    Enemy.Y += (float)(2 * Math.Cos(angle));
+
+                    if(threshold < CheckDistance((int)Enemy.X, (int)Enemy.Y, (int)Player.X, (int)Player.Y))
+                        ChangeState(state, STATE.RETREATING);
+                }
+            }
+            else if(state == STATE.RETREATING)
+            {
+                if(5 >= CheckDistance((int)Enemy.X, (int)Enemy.Y, cavex, cavey))
+                {
+                    Enemy.X = cavex;
+                    Enemy.Y = cavey;
+                    ChangeState(state, STATE.IDLE);
+                }
+                else
+                {
+                    float angle = AngleToTarget((int)Enemy.X, (int)Enemy.Y, cavex, cavey);
+                    Enemy.X += (float)(2 * Math.Sin(angle));
+                    Enemy.Y += (float)(2 * Math.Cos(angle));
+
+                    if(threshold > CheckDistance((int)Enemy.X, (int)Enemy.Y, (int)Player.X, (int)Player.Y))
+                        ChangeState(state, STATE.CHASING);
+                }
+            }
+            base.Update(gameTime);
         }
-        base.Update(gameTime);
-    }
 
-    /// <summary>
-    /// This is called when the game should draw itself.
-    /// </summary>
-    /// <param name="gameTime">Provides a snapshot of timing values.</param>
-    protected override void Draw(GameTime gameTime)
-    {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+        /// <summary>
+        /// This is called when the game should draw itself.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        // TODO: Add your drawing code here
-        spriteBatch.Begin();
-        spriteBatch.Draw(enemy, Enemy, Color.CornflowerBlue);
-        spriteBatch.Draw(player, Player, Color.CornflowerBlue);
-        spriteBatch.End();
-        base.Draw(gameTime);
-    }
-    public void ChangeState(STATE state, STATE newState)
-    {
-        state = newState;
-    }
-    public float CheckDistance(int x1, int y1, int x2, int y2)
-    {
-        return (float)Math.Sqrt(Math.Pow((float)x1 - x2, 2) + Math.Pow((float)y1 - y2, 2));
-    }
-    public float AngleToTarget(int x1, int y1, int x2, int y2)
-    {
-        float deltaX = (x2 - x1);
-        float deltaY = (y2 - y1);
-        return (float)Math.Atan2(deltaY, deltaX);
+            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            spriteBatch.Draw(enemy, Enemy, Color.CornflowerBlue);
+            spriteBatch.Draw(player, Player, Color.CornflowerBlue);
+            spriteBatch.End();
+            base.Draw(gameTime);
+        }
+        public void ChangeState(STATE state, STATE newState)
+        {
+            state = newState;
+        }
+        public float CheckDistance(int x1, int y1, int x2, int y2)
+        {
+            return (float)Math.Sqrt(Math.Pow((float)x1 - x2, 2) + Math.Pow((float)y1 - y2, 2));
+        }
+        public float AngleToTarget(int x1, int y1, int x2, int y2)
+        {
+            float deltaX = (x2 - x1);
+            float deltaY = (y2 - y1);
+            return (float)Math.Atan2(deltaY, deltaX);
+        }
     }
 }
