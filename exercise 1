@@ -95,7 +95,7 @@ namespace WindowsGame1
             }
             else if(state == STATE.CHASING)
             {
-                if(threshold < CheckDistance((int)Enemy.X, (int)Enemy.Y, cavex, cavey))
+                if(threshold < CheckDistance((int)Enemy.X, (int)Enemy.Y, (int)player.X, (int)player.Y))
                     ChangeState(state, STATE.RETREATING);
                 else
                 {
@@ -118,8 +118,8 @@ namespace WindowsGame1
                 else
                 {
                     float angle = AngleToTarget((int)Enemy.X, (int)Enemy.Y, cavex, cavey);
-                    Enemy.X += (float)(2 * Math.Sin(angle));
-                    Enemy.Y += (float)(2 * Math.Cos(angle));
+                    Enemy.X += (float)(2 * Math.Cos(angle));
+                    Enemy.Y += (float)(2 * Math.Sin(angle));
 
                     if(threshold > CheckDistance((int)Enemy.X, (int)Enemy.Y, (int)Player.X, (int)Player.Y))
                         ChangeState(state, STATE.CHASING);
